@@ -6,6 +6,7 @@ from PyQt5 import QtWidgets, uic
 from PyQt5.QtGui import QPixmap, QImage
 from PyQt5.QtCore import QTimer, qVersion
 import cv2
+import numpy as nd
 
 
 def img2pixmap(image):
@@ -26,9 +27,14 @@ def grabFrame():
     # ls = window.labelFrameInput.geometry()
     # window.labelFrameInput.setGeometry(10, 10, isz[1], isz[0])
     # window.labelFrameOutput.setGeometry(isz[1]+11, 10, isz[1], isz[0])
+    edges = cv2.Canny(image, 100, 200)
+    edges2 = nd.zeros( image.shape , nd.uint8)
+    edges2[:,:,0] = edges
+    edges2[:,:,1] = edges
+    edges2[:,:,2] = edges
 
     window.labelFrameInput.setPixmap(img2pixmap(image))
-    window.labelFrameOutput.setPixmap(img2pixmap(image))
+    window.labelFrameOutput.setPixmap(img2pixmap(edges2))
 
 
 def on_cameraON_clicked():
@@ -53,7 +59,7 @@ window.botaoCameraOn.clicked.connect(on_cameraON_clicked)
 window.botaoCameraOff.clicked.connect(on_cameraOFF_clicked)
 #window.labelFrameInput.setScaledContents(False)
 window.labelFrameInput.setScaledContents(True)
-
+window.labelFrameOutput.setScaledContents(True)
 
 qtimerFrame = QTimer()
 qtimerFrame.timeout.connect(grabFrame)
