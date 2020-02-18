@@ -72,7 +72,7 @@ model = tf.keras.Sequential([
 
 model.summary()
 from tensorflow.keras.utils import plot_model
-plot_model(model, to_file='model.png')
+plot_model(model, to_file='modelconv.png')
 
 model.compile(optimizer='adam',
               loss='sparse_categorical_crossentropy',

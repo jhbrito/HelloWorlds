@@ -16,7 +16,7 @@ base_dir = os.path.join(os.path.dirname(zip_file), 'flower_photos')
 classes = ['roses', 'daisy', 'dandelion', 'sunflowers', 'tulips']
 dataset_split_percentage = 0.1 # 0.8 # percentage of images for training
 epochs = 5 #80
-batch_size = 100
+batch_size = 32#100
 IMG_SHAPE = 150
 
 for cl in classes:
@@ -131,6 +131,7 @@ history = model.fit_generator(
     epochs=epochs,
     validation_data=val_data_gen,
     validation_steps=int(np.ceil(val_data_gen.n / float(batch_size))) )
+
 
 acc = history.history['accuracy']
 val_acc = history.history['val_accuracy']
