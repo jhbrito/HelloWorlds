@@ -14,10 +14,10 @@ zip_file = tf.keras.utils.get_file(origin=_URL, fname="flower_photos.tgz", extra
 base_dir = os.path.join(os.path.dirname(zip_file), 'flower_photos')
 
 classes = ['roses', 'daisy', 'dandelion', 'sunflowers', 'tulips']
-dataset_split_percentage = 0.1 # 0.8 # percentage of images for training
-epochs = 5 #80
-batch_size = 32#100
-IMG_SHAPE = 150
+dataset_split_percentage = 0.25 # 0.8 # percentage of images for training
+epochs = 3 #80
+batch_size = 64#100
+IMG_SHAPE = 224
 
 for cl in classes:
     img_path = os.path.join(base_dir, cl)
