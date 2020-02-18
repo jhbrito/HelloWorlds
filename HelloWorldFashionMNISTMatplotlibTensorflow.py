@@ -65,6 +65,10 @@ model = tf.keras.Sequential([
     tf.keras.layers.Dense(10,  activation=tf.nn.softmax)
 ])
 
+model.summary()
+from tensorflow.keras.utils import plot_model
+plot_model(model, to_file='modeldense.png')
+
 model.compile(optimizer='adam',
               loss='sparse_categorical_crossentropy',
               metrics=['accuracy'])

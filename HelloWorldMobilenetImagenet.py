@@ -9,6 +9,8 @@ import PIL.Image as PImage
 import matplotlib.pyplot as plt
 
 model = tf.keras.applications.mobilenet_v2.MobileNetV2(weights='imagenet')
+model.summary()
+
 IMAGE_RES = 224
 
 image_path  = tf.keras.utils.get_file('grace_hopper.jpg',  'https://storage.googleapis.com/download.tensorflow.org/example_images/grace_hopper.jpg')
