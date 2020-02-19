@@ -1,5 +1,7 @@
 # regression to convert from Celsius to Fahrenheit
-# C ×1.8 + 32 = F
+# Straightforward example without normalization
+# the network should aproximate the correct relationship between Celsius and Fahrenheit
+# C × 1.8 + 32 = F
 
 import tensorflow as tf
 import numpy as np
