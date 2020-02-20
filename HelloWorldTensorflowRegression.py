@@ -4,6 +4,7 @@
 # C × 1.8 + 32 = F
 
 import tensorflow as tf
+print(tf.__version__)
 import numpy as np
 import matplotlib.pyplot as plt
 
