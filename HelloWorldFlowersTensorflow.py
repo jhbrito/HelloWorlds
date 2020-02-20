@@ -56,7 +56,8 @@ def plotImages(images_arr):
     plt.tight_layout()
     plt.show()
 
-image_gen = ImageDataGenerator(rescale=1./255, horizontal_flip=True)
+image_gen = ImageDataGenerator(rescale=1./255,
+                               horizontal_flip=True)
 train_data_gen = image_gen.flow_from_directory(
     batch_size=batch_size,
     directory=train_dir,
@@ -65,7 +66,8 @@ train_data_gen = image_gen.flow_from_directory(
 augmented_images = [train_data_gen[0][0][0] for i in range(5)]
 plotImages(augmented_images)
 
-image_gen = ImageDataGenerator(rescale=1./255, rotation_range=45)
+image_gen = ImageDataGenerator(rescale=1./255,
+                               rotation_range=45)
 train_data_gen = image_gen.flow_from_directory(
     batch_size=batch_size,
     directory=train_dir,
@@ -74,7 +76,8 @@ train_data_gen = image_gen.flow_from_directory(
 augmented_images = [train_data_gen[0][0][0] for i in range(5)]
 plotImages(augmented_images)
 
-image_gen = ImageDataGenerator(rescale=1./255, zoom_range=0.5)
+image_gen = ImageDataGenerator(rescale=1./255,
+                               zoom_range=0.5)
 train_data_gen = image_gen.flow_from_directory(
     batch_size=batch_size,
     directory=train_dir,

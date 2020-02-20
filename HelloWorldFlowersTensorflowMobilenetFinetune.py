@@ -75,7 +75,8 @@ plot_model(modelMobilenet, to_file='Mobilenet.png')
 modelMobilenet.trainable = False
 base_output = modelMobilenet.layers[-2].output # layer number obtained from model summary above
 new_output = tf.keras.layers.Dense(5, activation="softmax")(base_output)
-modelMobilenetFlowers = tf.keras.models.Model(inputs=modelMobilenet.inputs, outputs=new_output)
+modelMobilenetFlowers = tf.keras.models.Model(
+    inputs=modelMobilenet.inputs, outputs=new_output)
 modelMobilenetFlowers.summary()
 
 
