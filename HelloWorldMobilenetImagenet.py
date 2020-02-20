@@ -13,12 +13,13 @@ model.summary()
 
 IMAGE_RES = 224
 
-image_path  = tf.keras.utils.get_file('grace_hopper.jpg',  'https://storage.googleapis.com/download.tensorflow.org/example_images/grace_hopper.jpg')
 labels_path = tf.keras.utils.get_file('ImageNetLabels.txt','https://storage.googleapis.com/download.tensorflow.org/data/ImageNetLabels.txt')
 imagenet_labels = np.array(open(labels_path).read().splitlines())
 
+image_path  = tf.keras.utils.get_file('grace_hopper.jpg',  'https://storage.googleapis.com/download.tensorflow.org/example_images/grace_hopper.jpg')
 image1 = PImage.open(image_path).resize((IMAGE_RES, IMAGE_RES))
-image2 = PImage.open("./STOP.jpg").resize((IMAGE_RES, IMAGE_RES))
+image_path  = tf.keras.utils.get_file('STOP.jpg',  'https://upload.wikimedia.org/wikipedia/commons/f/f9/STOP_sign.jpg')
+image2 = PImage.open("STOP.jpg").resize((IMAGE_RES, IMAGE_RES))
 
 plt.imshow(image1)
 plt.axis('off')
