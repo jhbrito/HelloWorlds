@@ -10,11 +10,10 @@ import matplotlib.pyplot as plt
 celsius_d    = np.array([-40, -10, 0, 8, 15, 22, 38], dtype=float)
 fahrenheit_d = np.array([-40, 14, 32, 46, 59, 72, 100], dtype=float)
 
-EPOCHS = 50
-n_samples=1000
+EPOCHS = 150
+n_samples=10
 mean_samples=15.0
 std_samples=30.0
-
 
 celsius    = np.random.randn(n_samples)*std_samples+mean_samples
 fahrenheit = celsius * 1.8 + 32
@@ -37,19 +36,23 @@ model.compile(
 history = model.fit(celsius, fahrenheit, epochs=EPOCHS, verbose=False)
 print("Finished training the simple model ")
 
-plt.figure()
-plt.plot(history.history['loss'])
-plt.xlabel('Epoch Number')
-plt.ylabel("Loss Magnitude")
-plt.title("simple model")
-plt.show()
-
 c = [100.0]
 f = model.predict(c)
-print("100 C =",f)
+print("Simple model predicts that 100 degrees Celsius is: {} degrees Fahrenheit".format(f))
+f_gt = np.array(c) * 1.8 + 32
+print("Simple model error is: {} degrees Fahrenheit".format(f-f_gt))
 
 l0_weights = l0.get_weights()
 print("Layer variables: {}".format(l0_weights))
+
+plt.figure()
+plt.subplot(1,3,1)
+plt.plot(history.history['loss'])
+plt.xlabel('Epoch Number')
+plt.ylabel("Loss Magnitude")
+plt.title("Simple Model")
+# plt.show()
+
 
 l0 = tf.keras.layers.Dense(units=4, input_shape=[1])
 l1 = tf.keras.layers.Dense(units=4)
@@ -61,25 +64,28 @@ model.compile(
 history = model.fit(celsius, fahrenheit, epochs=EPOCHS, verbose=False)
 print("Finished training the complex model")
 
-plt.figure()
+c = np.array([100.0], dtype=float)
+f = model.predict(c)
+print("Complex model predicts that 100 degrees Celsius is: {} degrees Fahrenheit".format(f))
+f_gt = np.array(c) * 1.8 + 32
+print("Complex model error is: {} degrees Fahrenheit".format(f-f_gt))
+
+print("Complex layer variables")
+print(" l0 variables: {}".format(l0.get_weights()))
+print(" l1 variables: {}".format(l1.get_weights()))
+print(" l2 variables: {}".format(l2.get_weights()))
+
+
+# plt.figure()
+plt.subplot(1,3,2)
 plt.plot(history.history['loss'])
 plt.xlabel('Epoch Number')
 plt.ylabel("Loss Magnitude")
-plt.title("Model Complex")
-plt.show()
-
-c = np.array([100.0], dtype=float)
-f = model.predict(c)
-print(f)
-print("Model predicts that 100 degrees Celsius is: {} degrees Fahrenheit".format(f))
-print("These are the l0 variables: {}".format(l0.get_weights()))
-print("These are the l1 variables: {}".format(l1.get_weights()))
-print("These are the l2 variables: {}".format(l2.get_weights()))
+plt.title("Complex Model")
+# plt.show()
 
 ##########################################
 # Normalization
-
-print("Using normalization")
 
 def normalize(values):
     values_std = np.std(values)
@@ -105,20 +111,24 @@ model_n.compile(
 )
 
 history = model_n.fit(celsius_n, fahrenheit_n, epochs=EPOCHS, verbose=False)
-print("Finished training the model normalized")
-
-plt.figure()
-plt.plot(history.history['loss'])
-plt.xlabel('Epoch Number')
-plt.ylabel("Loss Magnitude")
-plt.title("Model Normalized")
-plt.show()
+print("Finished training the normalized model")
 
 c = [100.0]
+f_gt = np.array(c) * 1.8 + 32
 c=(c-celsius_mean)/celsius_std
 f=model_n.predict(c)
 f=denormalize(f, fahrenheit_mean, fahrenheit_std)
-print("100 C =",f)
+print("Normalized model predicts that 100 degrees Celsius is: {} degrees Fahrenheit".format(f))
+print("Normalized model error is: {} degrees Fahrenheit".format(f-f_gt))
 
 l0_weights_n = l0_n.get_weights()
 print("Normalized layer variables: {}".format(l0_weights_n))
+
+# plt.figure()
+plt.subplot(1,3,3)
+plt.plot(history.history['loss'])
+plt.xlabel('Epoch Number')
+plt.ylabel("Loss Magnitude")
+plt.title("Normalized Model")
+
+plt.show()
