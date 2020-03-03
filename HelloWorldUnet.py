@@ -15,11 +15,8 @@ datasetPath = "./membrane"
 trainFolder = "train"
 valFolder = "aug-val"
 testFolder = "test"
-
-resultsPath = "./membrane/test/predict"
 modelsPath = "./models"
-
-r.seed(1)
+resultsPath = "./membrane/test/predict"
 
 trainSize = -1 # -1 for all
 valSize = -1 # -1 for all
@@ -28,10 +25,19 @@ exampleSize = (512, 512)
 inputSize = (256, 256)
 maskSize = (256, 256)
 batchSize = 8
-epochs = 16
+epochs = 100
 numClasses = 2
 showImages = False
 
+modelFileName = "unet_membraneE" + str(epochs) + ".hdf5"
+
+augmentation_args = dict(
+    width_shift_range=range(256),
+    height_shift_range=range(256),
+    rotation_range=[0, 90, 180, 270],
+    horizontal_flip=True,
+    vertical_flip=True
+)
 
 def prepareDataset(datasetPath, trainFolder, valFolder, testFolder):
     trainSetX = []
@@ -91,17 +97,6 @@ def prepareDataset(datasetPath, trainFolder, valFolder, testFolder):
     return trainSetX, trainSetY, valSetX, valSetY, testSetX
 
 
-trainSetX, trainSetY, valSetX, valSetY, testSetX = prepareDataset(datasetPath=datasetPath, trainFolder=trainFolder, valFolder=valFolder, testFolder=testFolder)
-
-augmentation_args = dict(
-    width_shift_range=range(256),
-    height_shift_range=range(256),
-    rotation_range=[0, 90, 180, 270],
-    horizontal_flip=True,
-    vertical_flip=True
-)
-
-
 def normalizeMask(mask, num_class=2):
     mask = mask/255
     new_mask = np.zeros(mask.shape + (num_class,))
@@ -119,17 +114,6 @@ class BatchLossHistory(tf.keras.callbacks.Callback):
         self.batch_losses.append(logs.get('loss'))
         self.batch_accuracies.append(logs.get('accuracy'))
 
-
-batch_history = BatchLossHistory()
-
-if trainSize > 0:
-    trainSetX = trainSetX[0:trainSize]
-    trainSetY = trainSetY[0:trainSize]
-if valSize > 0:
-    valSetX = valSetX[0:valSize]
-    valSetY = valSetY[0:valSize]
-if testSize > 0:
-    testSetX = testSetX[0:testSize]
 
 
 def normalizeChannel(channel):
@@ -215,10 +199,6 @@ def trainGenerator(batch_size, trainSetX, trainSetY, aug_dict, inputSize=(256, 2
                         masks = masks[0:iTileInBatch,:,:,:]
                         break
                 yield (images, masks)
-
-
-trainGene = trainGenerator(batchSize, trainSetX, trainSetY, augmentation_args, inputSize=inputSize, inputChannels=1, maskSize=maskSize, numClasses=numClasses)
-valGene = trainGenerator(batchSize, valSetX, valSetY, dict(), inputSize=inputSize, inputChannels=1, maskSize=maskSize, numClasses=numClasses)
 
 
 def unetCustom(pretrained_weights=None, inputSize=(256, 256, 1), numClass=2, do_batch_normalization=False, use_transpose_convolution=False):
@@ -351,17 +331,6 @@ def unetCustom(pretrained_weights=None, inputSize=(256, 256, 1), numClass=2, do_
 
     return model
 
-modelFilePath = os.path.join(modelsPath, "unet_membrane.hdf5")
-model = unetCustom(pretrained_weights=modelFilePath, inputSize=(256, 256, 1), numClass=2, do_batch_normalization=False, use_transpose_convolution=False)
-model_checkpoint = tf.keras.callbacks.ModelCheckpoint(modelFilePath, monitor='loss', verbose=1, save_best_only=True)
-
-Ntrain = len(trainSetX)
-stepsPerEpoch = np.ceil(Ntrain / batchSize)
-Nval = len(valSetX)
-validationSteps = np.ceil(Nval / batchSize)
-
-history = model.fit(trainGene, steps_per_epoch=stepsPerEpoch, epochs=epochs, callbacks=[model_checkpoint, batch_history], validation_data=valGene, validation_steps=validationSteps)
-
 
 def do_center_crop(image, newSize):
     cropy = (int)((image[0].shape[0] - newSize[0]) / 2)
@@ -386,10 +355,6 @@ def testGenerator(testSetX, inputSize=(256, 256), inputChannels=1):
         yield (img)
 
 
-testGene = testGenerator(testSetX, inputSize=inputSize, inputChannels=1)
-NTest=len(testSetX)
-testSteps = np.ceil(NTest / batchSize)
-results = model.predict(testGene, verbose=1)
 
 
 def saveResults(testSetX, results, resultsPath):
@@ -400,47 +365,88 @@ def saveResults(testSetX, results, resultsPath):
         mask_predict = mask_predict * 255
         skimage_io.imsave(os.path.join(resultsPath, os.path.basename(filename) + "_predict.png"), mask_predict)
 
-
-saveResults(testSetX, results, resultsPath)
-
-plt.subplot(2, 2, 1)
-plt.plot(history.history['accuracy'])
-plt.plot(history.history['val_accuracy'])
-plt.title('Model accuracy')
-plt.ylabel('Accuracy')
-plt.xlabel('Epoch')
-plt.legend(['Train', 'Test'], loc='lower right')
-#plt.show()
-
-# Plot training & validation loss values
-plt.subplot(2, 2, 2)
-plt.plot(history.history['loss'])
-plt.plot(history.history['val_loss'])
-plt.title('Model loss')
-plt.ylabel('Loss')
-plt.xlabel('Epoch')
-plt.legend(['Train', 'Test'], loc='upper right')
-
-
 def moving_average(a, n=3) :
     ret = np.cumsum(a, dtype=float)
     ret[n:] = ret[n:] - ret[:-n]
     return ret[n - 1:] / n
 
 
-plt.subplot(2, 2, 3)
-plt.plot(moving_average(batch_history.batch_accuracies, 5))
-plt.title('Model accuracy')
-plt.ylabel('Accuracy')
-plt.xlabel('Batch')
-plt.legend(['Train'], loc='lower right')
+def main():
+    r.seed(1)
+    trainSetX, trainSetY, valSetX, valSetY, testSetX = prepareDataset(datasetPath=datasetPath, trainFolder=trainFolder,
+                                                                      valFolder=valFolder, testFolder=testFolder)
+    batch_history = BatchLossHistory()
 
-# Plot training & validation loss values
-plt.subplot(2, 2, 4)
-plt.plot(moving_average(batch_history.batch_losses, 5))
-plt.title('Model loss')
-plt.ylabel('Loss')
-plt.xlabel('Batch')
-plt.legend(['Train'], loc='upper right')
+    if trainSize > 0:
+        trainSetX = trainSetX[0:trainSize]
+        trainSetY = trainSetY[0:trainSize]
+    if valSize > 0:
+        valSetX = valSetX[0:valSize]
+        valSetY = valSetY[0:valSize]
+    if testSize > 0:
+        testSetX = testSetX[0:testSize]
 
-plt.show()
+    trainGene = trainGenerator(batchSize, trainSetX, trainSetY, augmentation_args, inputSize=inputSize, inputChannels=1,
+                               maskSize=maskSize, numClasses=numClasses)
+    valGene = trainGenerator(batchSize, valSetX, valSetY, dict(), inputSize=inputSize, inputChannels=1,
+                             maskSize=maskSize, numClasses=numClasses)
+
+    modelFilePath = os.path.join(modelsPath, modelFileName)
+    model = unetCustom(inputSize=(256, 256, 1), numClass=2, do_batch_normalization=False,
+                       use_transpose_convolution=False)
+    model_checkpoint = tf.keras.callbacks.ModelCheckpoint(modelFilePath, monitor='loss', verbose=1, save_best_only=True)
+
+    Ntrain = len(trainSetX)
+    stepsPerEpoch = np.ceil(Ntrain / batchSize)
+    Nval = len(valSetX)
+    validationSteps = np.ceil(Nval / batchSize)
+
+    history = model.fit(trainGene, steps_per_epoch=stepsPerEpoch, epochs=epochs,
+                        callbacks=[model_checkpoint, batch_history], validation_data=valGene,
+                        validation_steps=validationSteps)
+
+
+    testGene = testGenerator(testSetX, inputSize=inputSize, inputChannels=1)
+    NTest=len(testSetX)
+    testSteps = np.ceil(NTest / batchSize)
+    results = model.predict(testGene, verbose=1)
+    saveResults(testSetX, results, resultsPath)
+
+    plt.subplot(2, 2, 1)
+    plt.plot(history.history['accuracy'])
+    plt.plot(history.history['val_accuracy'])
+    plt.title('Model accuracy')
+    plt.ylabel('Accuracy')
+    plt.xlabel('Epoch')
+    plt.legend(['Train', 'Test'], loc='lower right')
+    #plt.show()
+
+    # Plot training & validation loss values
+    plt.subplot(2, 2, 2)
+    plt.plot(history.history['loss'])
+    plt.plot(history.history['val_loss'])
+    plt.title('Model loss')
+    plt.ylabel('Loss')
+    plt.xlabel('Epoch')
+    plt.legend(['Train', 'Test'], loc='upper right')
+
+    plt.subplot(2, 2, 3)
+    plt.plot(moving_average(batch_history.batch_accuracies, 5))
+    plt.title('Model accuracy')
+    plt.ylabel('Accuracy')
+    plt.xlabel('Batch')
+    plt.legend(['Train'], loc='lower right')
+
+    # Plot training & validation loss values
+    plt.subplot(2, 2, 4)
+    plt.plot(moving_average(batch_history.batch_losses, 5))
+    plt.title('Model loss')
+    plt.ylabel('Loss')
+    plt.xlabel('Batch')
+    plt.legend(['Train'], loc='upper right')
+
+    plt.show()
+
+
+if __name__ == '__main__':
+    main()
