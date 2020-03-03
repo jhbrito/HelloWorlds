@@ -9,6 +9,10 @@ import skimage.transform as skimage_transform
 import random as r
 import numpy as np
 import tensorflow as tf
+import tensorflow  as tf
+print("Tensorflow version:",tf.__version__)
+print("GPU available:", tf.config.list_physical_devices('GPU'))
+
 # import PIL.Image as PImage
 
 datasetPath = "./membrane"
@@ -24,12 +28,13 @@ testSize = -1 # -1 for all
 exampleSize = (512, 512)
 inputSize = (256, 256)
 maskSize = (256, 256)
-batchSize = 8
+batchSize = 4
 epochs = 100
+learning_rate = 1e-4
 numClasses = 2
 showImages = False
 
-modelFileName = "unet_membraneE" + str(epochs) + ".hdf5"
+modelFileName = "unet_membrane" + "E" + str(epochs) + "LR" + str(learning_rate) + ".hdf5"
 
 augmentation_args = dict(
     width_shift_range=range(256),
@@ -322,7 +327,9 @@ def unetCustom(pretrained_weights=None, inputSize=(256, 256, 1), numClass=2, do_
 
     model = tf.keras.models.Model(inputs=inputs, outputs=conv10)
 
-    model.compile(optimizer=tf.keras.optimizers.Adam(lr=1e-4), loss='categorical_crossentropy', metrics=['accuracy'])
+    model.compile(optimizer=tf.keras.optimizers.Adam(lr=learning_rate),
+                  loss='categorical_crossentropy',
+                  metrics=['accuracy'])
 
     model.summary()
 
@@ -401,8 +408,11 @@ def main():
     Nval = len(valSetX)
     validationSteps = np.ceil(Nval / batchSize)
 
-    history = model.fit(trainGene, steps_per_epoch=stepsPerEpoch, epochs=epochs,
-                        callbacks=[model_checkpoint, batch_history], validation_data=valGene,
+    history = model.fit(trainGene,
+                        steps_per_epoch=stepsPerEpoch,
+                        epochs=epochs,
+                        callbacks=[model_checkpoint, batch_history],
+                        validation_data=valGene,
                         validation_steps=validationSteps)
 
 
