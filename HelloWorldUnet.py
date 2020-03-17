@@ -34,7 +34,7 @@ learning_rate = 1e-4
 numClasses = 2
 showImages = False
 
-modelFileName = "unet_membrane" + "E" + str(epochs) + "LR" + str(learning_rate) + ".hdf5"
+modelFileName = "unet_membrane_TCV" + "E" + str(epochs) + "LR" + str(learning_rate) + ".hdf5"
 
 augmentation_args = dict(
     width_shift_range=range(256),
