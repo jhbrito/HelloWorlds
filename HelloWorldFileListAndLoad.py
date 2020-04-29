@@ -2,15 +2,12 @@ import os
 import PIL.Image as PImage
 import matplotlib.pyplot as plt
 
+pasta = "membrane/train/image"
 
-pasta="membrane/train/image"
+list_of_files = os.scandir(pasta)
 
-lista_de_ficheiros = os.scandir(pasta)
-
-for ficheiro in lista_de_ficheiros:
-    ficheiro_path = os.path.join(pasta, ficheiro.name)
-    image = PImage.open(ficheiro_path)
+for file in list_of_files:
+    file_path = os.path.join(pasta, file.name)
+    image = PImage.open(file_path)
     plt.imshow(image)
 print("End")
-
-
