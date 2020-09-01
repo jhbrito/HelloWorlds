@@ -8,19 +8,19 @@ import skimage.io as skimage_io
 import skimage.transform as skimage_transform
 import random as r
 import numpy as np
+import datetime
 import tensorflow as tf
-import tensorflow  as tf
-print("Tensorflow version:",tf.__version__)
+print("Tensorflow version:", tf.__version__)
 print("GPU available:", tf.config.list_physical_devices('GPU'))
 
 # import PIL.Image as PImage
 
-datasetPath = "./membrane"
+datasetPath = "membrane"
 trainFolder = "train"
 valFolder = "aug-val"
 testFolder = "test"
-modelsPath = "./models"
-resultsPath = "./membrane/test/predict"
+modelsPath = "models"
+resultsPath = "membrane/test/predict"
 
 trainSize = -1 # -1 for all
 valSize = -1 # -1 for all
@@ -402,6 +402,8 @@ def main():
     model = unetCustom(inputSize=(256, 256, 1), numClass=2, do_batch_normalization=False,
                        use_transpose_convolution=False)
     model_checkpoint = tf.keras.callbacks.ModelCheckpoint(modelFilePath, monitor='loss', verbose=1, save_best_only=True)
+    log_dir = os.path.join("logs", "fit", datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
+    tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
 
     Ntrain = len(trainSetX)
     stepsPerEpoch = np.ceil(Ntrain / batchSize)
@@ -411,7 +413,10 @@ def main():
     history = model.fit(trainGene,
                         steps_per_epoch=stepsPerEpoch,
                         epochs=epochs,
-                        callbacks=[model_checkpoint, batch_history],
+                        callbacks=[model_checkpoint,
+                                   batch_history,
+                                   tensorboard_callback,
+                                   ],
                         validation_data=valGene,
                         validation_steps=validationSteps)
 
