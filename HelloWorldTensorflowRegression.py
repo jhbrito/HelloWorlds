@@ -149,7 +149,7 @@ l0_weights_n_init = l0_n.get_weights()
 print("Normalized Model - layer variables init: {}".format(l0_weights_n_init))
 
 batch_history_n = BatchLossHistory()
-history_n = model_n.fit(celsius_n, fahrenheit_n,
+history_simple_normalized = model_n.fit(celsius_n, fahrenheit_n,
                       epochs=EPOCHS,
                       callbacks=[batch_history_n],
                       verbose=False)
@@ -204,23 +204,17 @@ plt.plot(history_simple.history['loss'])
 plt.xlabel('Epoch Number')
 plt.ylabel("Loss Magnitude")
 plt.title("Simple Model")
-plt.xlim([0, 100])
-plt.ylim([0, 100])
 
 plt.subplot(1,3,2)
 plt.plot(history_complex.history['loss'])
 plt.xlabel('Epoch Number')
 plt.ylabel("Loss Magnitude")
 plt.title("Complex Model")
-plt.xlim([0, 100])
-plt.ylim([0, 100])
 
 plt.subplot(1,3,3)
-plt.plot(history_n.history['loss'])
+plt.plot(history_simple_normalized.history['loss'])
 plt.xlabel('Epoch Number')
 plt.ylabel("Loss Magnitude")
 plt.title("Normalized Model")
-plt.xlim([0, 100])
-plt.ylim([0, 100])
 
 plt.show()
