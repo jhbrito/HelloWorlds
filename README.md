@@ -1,5 +1,5 @@
 # Hello Worlds
-Basic examples of Artificial Inteligence, Machine Learning and Computer Vision.
+Introductory examples of Artificial Inteligence, Machine Learning and Computer Vision.
 
 Topics so far:
 - Python
