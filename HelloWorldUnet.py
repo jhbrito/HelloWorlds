@@ -10,8 +10,9 @@ import random as r
 import numpy as np
 import datetime
 import tensorflow as tf
-print("Tensorflow version:", tf.__version__)
-print("GPU available:", tf.config.list_physical_devices('GPU'))
+
+print("Tensorflow {}".format(tf.__version__))
+print("GPU devices: {}".format(tf.config.list_physical_devices('GPU')))
 
 # import PIL.Image as PImage
 

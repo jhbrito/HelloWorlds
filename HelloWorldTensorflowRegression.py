@@ -24,6 +24,7 @@ fahrenheit = celsius * 1.8 + 32
 
 import tensorflow as tf
 print("Tensorflow {}".format(tf.__version__))
+print("GPU devices: {}".format(tf.config.list_physical_devices('GPU')))
 
 ##########################
 # Simple Model
