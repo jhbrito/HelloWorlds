@@ -21,7 +21,6 @@ trainFolder = "train"
 valFolder = "aug-val"
 testFolder = "test"
 modelsPath = "models"
-resultsPath = "membrane/test/predict"
 
 trainSize = -1 # -1 for all
 valSize = -1 # -1 for all
@@ -36,6 +35,7 @@ numClasses = 2
 showImages = False
 
 modelFileName = "unet_membrane_TCV" + "E" + str(epochs) + "LR" + str(learning_rate) + ".hdf5"
+resultsPath = "membrane/test/predict" + "E" + str(epochs) + "LR" + str(learning_rate)
 
 augmentation_args = dict(
     width_shift_range=range(256),
@@ -363,6 +363,10 @@ def testGenerator(testSetX, inputSize=(256, 256), inputChannels=1):
         yield (img)
 
 
+def do_center_crop_channel(image, newSize):
+    cropy = (int)((image.shape[0] - newSize[0]) / 2)
+    cropx = (int)((image.shape[1] - newSize[1]) / 2)
+    return image[cropy:image.shape[0] - cropy, cropx:image.shape[1] - cropx]
 
 
 def saveResults(testSetX, results, resultsPath):
@@ -372,6 +376,26 @@ def saveResults(testSetX, results, resultsPath):
         mask_predict = mask_predict.astype(np.uint8)
         mask_predict = mask_predict * 255
         skimage_io.imsave(os.path.join(resultsPath, os.path.basename(filename) + "_predict.png"), mask_predict)
+        if (showImages):
+            imagePath = filename
+            image = skimage_io.imread(imagePath)
+            image = do_center_crop_channel(image, newSize=(256, 256))
+
+            plt.figure(figsize=(6, 3))
+            plt.subplot(1, 2, 1)
+            plt.grid(False)
+            plt.xticks([])
+            plt.yticks([])
+            plt.imshow(image, cmap='gray')
+            plt.xlabel("Image - {}".format(os.path.basename(imagePath)))
+            plt.subplot(1, 2, 2)
+            plt.grid(False)
+            plt.xticks([])
+            plt.yticks([])
+            plt.imshow(mask_predict, cmap='gray')
+            plt.xlabel("Predicted Mask")
+            plt.show()
+
 
 def moving_average(a, n=3) :
     ret = np.cumsum(a, dtype=float)
@@ -402,7 +426,7 @@ def main():
     modelFilePath = os.path.join(modelsPath, modelFileName)
     model = unetCustom(inputSize=(256, 256, 1), numClass=2, do_batch_normalization=False,
                        use_transpose_convolution=False)
-    model_checkpoint = tf.keras.callbacks.ModelCheckpoint(modelFilePath, monitor='loss', verbose=1, save_best_only=True)
+    model_checkpoint = tf.keras.callbacks.ModelCheckpoint(modelFilePath, monitor='val_loss', verbose=1, save_best_only=True)
     log_dir = os.path.join("logs", "fit", datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
     tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
 
@@ -426,6 +450,8 @@ def main():
     NTest=len(testSetX)
     testSteps = np.ceil(NTest / batchSize)
     results = model.predict(testGene, verbose=1)
+    if not os.path.exists(resultsPath):
+        os.makedirs(resultsPath)
     saveResults(testSetX, results, resultsPath)
 
     plt.subplot(2, 2, 1)
