@@ -68,6 +68,7 @@ val_data_gen = image_gen_val.flow_from_directory(
     class_mode='sparse')
 
 modelMobilenet = tf.keras.applications.mobilenet_v2.MobileNetV2(weights='imagenet')
+# model = tf.keras.applications.inception_v3.InceptionV3(weights="imagenet")
 modelMobilenet.summary()
 from tensorflow.keras.utils import plot_model
 plot_model(modelMobilenet, to_file='Mobilenet.png')
