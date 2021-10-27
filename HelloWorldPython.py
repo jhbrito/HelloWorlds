@@ -2,6 +2,16 @@
 
 print("Hello World")
 
+# Builtin types:
+# Boolean Type - bool
+# Numeric Types - int, float, complex
+# Binary Sequence Types - bytes, bytearray, memoryview
+# Sequence Types - list, tuple, range
+# Text Sequence Type - str
+# Set Types - set, frozenset
+# Mapping Types — dict
+
+
 a = 1
 b = 2
 c = a + b
@@ -37,6 +47,7 @@ c = a + b
 a = 0.1
 b = 0.2
 c = a + b
+print(c)
 
 m = "olá"
 print(m)
@@ -55,24 +66,21 @@ q = f1(10, 3)
 print("q:", q)
 
 a = (1, 3, 5, 7, 9)
-print("a")
-print(a)
+print("a:", a)
 print(a[3])
 print(a[2:4])
 print(a[2:])
 # a[1]=10
 
 b = [2, 4, 6, 8, 10]
-print("b")
-print(b)
+print("b:", b)
 print(b[3])
 print(b[2:4])
 print(b[2:])
 b[1] = 10
 
 c = list(a)
-print("c")
-print(c)
+print("c:", c)
 print(c[3])
 print(c[2:4])
 print(c[2:])
