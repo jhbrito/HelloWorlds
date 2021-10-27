@@ -424,7 +424,9 @@ def main():
                              maskSize=maskSize, numClasses=numClasses)
 
     modelFilePath = os.path.join(modelsPath, modelFileName)
-    model = unetCustom(inputSize=(256, 256, 1), numClass=2, do_batch_normalization=False,
+    model = unetCustom(inputSize=(256, 256, 1),
+                       numClass=2,
+                       do_batch_normalization=False,
                        use_transpose_convolution=False)
     model_checkpoint = tf.keras.callbacks.ModelCheckpoint(modelFilePath, monitor='val_loss', verbose=1, save_best_only=True)
     log_dir = os.path.join("logs", "fit", datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
@@ -444,6 +446,13 @@ def main():
                                    ],
                         validation_data=valGene,
                         validation_steps=validationSteps)
+
+    # load best model
+    model = unetCustom(pretrained_weights=modelFilePath,
+                       inputSize=(256, 256, 1),
+                       numClass=2,
+                       do_batch_normalization=False,
+                       use_transpose_convolution=False)
 
 
     testGene = testGenerator(testSetX, inputSize=inputSize, inputChannels=1)
