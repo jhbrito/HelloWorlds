@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 print("Hello World FashionMNIST Matplotlib Tensorflow")
 print("tensorflow Version:", tf.__version__)
 print("tensorflow_datasets Version:", tfds.__version__)
+print("Devices: {}".format(tf.config.list_physical_devices()))
 
 dataset, metadata = tfds.load('fashion_mnist', as_supervised=True, with_info=True)
 train_dataset, test_dataset = dataset['train'], dataset['test']
