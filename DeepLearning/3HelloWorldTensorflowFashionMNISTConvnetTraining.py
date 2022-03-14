@@ -15,6 +15,7 @@ import matplotlib.pyplot as plt
 print("Hello World FashionMNIST Matplotlib Tensorflow Convnet")
 print("tensorflow Version:", tf.__version__)
 print("tensorflow_datasets Version:", tfds.__version__)
+print("Devices: {}".format(tf.config.list_physical_devices()))
 
 dataset, metadata = tfds.load('fashion_mnist', as_supervised=True, with_info=True)
 train_dataset, test_dataset = dataset['train'], dataset['test']
@@ -25,20 +26,22 @@ num_test_examples = metadata.splits['test'].num_examples
 print("Number of training examples: {}".format(num_train_examples))
 print("Number of test examples:     {}".format(num_test_examples))
 
+
 def normalize(images, labels):
     images = tf.cast(images, tf.float32)
     images /= 255
     return images, labels
 
+
 # The map function applies the normalize function to each element in the train
 # and test datasets
-train_dataset =  train_dataset.map(normalize)
-test_dataset  =  test_dataset.map(normalize)
+train_dataset = train_dataset.map(normalize)
+test_dataset = test_dataset.map(normalize)
 
 # Take a single image, and remove the color dimension by reshaping
 for image, label in test_dataset.take(1):
     break
-image = image.numpy().reshape((28,28))
+image = image.numpy().reshape((28, 28))
 
 # Plot the image - voila a piece of fashion clothing
 plt.figure()
@@ -47,11 +50,11 @@ plt.colorbar()
 plt.grid(False)
 plt.show()
 
-plt.figure(figsize=(10,10))
+plt.figure(figsize=(10, 10))
 i = 0
 for (image, label) in test_dataset.take(25):
-    image = image.numpy().reshape((28,28))
-    plt.subplot(5,5,i+1)
+    image = image.numpy().reshape((28, 28))
+    plt.subplot(5, 5, i + 1)
     plt.xticks([])
     plt.yticks([])
     plt.grid(False)
@@ -61,18 +64,19 @@ for (image, label) in test_dataset.take(25):
 plt.show()
 
 model = tf_keras.Sequential([
-    tf_keras.layers.Conv2D(32, (3,3), padding='same', activation=tf.nn.relu,
+    tf_keras.layers.Conv2D(32, (3, 3), padding='same', activation=tf.nn.relu,
                            input_shape=(28, 28, 1)),
     tf_keras.layers.MaxPooling2D((2, 2), strides=2),
-    tf_keras.layers.Conv2D(64, (3,3), padding='same', activation=tf.nn.relu),
+    tf_keras.layers.Conv2D(64, (3, 3), padding='same', activation=tf.nn.relu),
     tf_keras.layers.MaxPooling2D((2, 2), strides=2),
     tf_keras.layers.Flatten(),
     tf_keras.layers.Dense(128, activation=tf.nn.relu),
-    tf_keras.layers.Dense(10,  activation=tf.nn.softmax)
+    tf_keras.layers.Dense(10, activation=tf.nn.softmax)
 ])
 
 model.summary()
 from tensorflow.keras.utils import plot_model
+
 plot_model(model, to_file='modelconv.png', show_shapes=True, expand_nested=True)
 
 model.compile(optimizer='adam',
@@ -81,7 +85,7 @@ model.compile(optimizer='adam',
 
 BATCH_SIZE = 32
 EPOCHS = 5
-STEPS_PER_EPOCH=math.ceil(num_train_examples/BATCH_SIZE)
+STEPS_PER_EPOCH = math.ceil(num_train_examples / BATCH_SIZE)
 
 train_dataset = train_dataset.repeat().shuffle(num_train_examples).batch(BATCH_SIZE)
 test_dataset = test_dataset.batch(BATCH_SIZE)
@@ -89,7 +93,7 @@ test_dataset = test_dataset.batch(BATCH_SIZE)
 # this is the training part, it will take some time...
 model.fit(train_dataset, epochs=EPOCHS, steps_per_epoch=STEPS_PER_EPOCH)
 
-test_loss, test_accuracy = model.evaluate(test_dataset, steps=math.ceil(num_test_examples/32))
+test_loss, test_accuracy = model.evaluate(test_dataset, steps=math.ceil(num_test_examples / 32))
 print('Accuracy on test dataset:', test_accuracy)
 
 for test_images, test_labels in test_dataset.take(1):
@@ -101,6 +105,7 @@ print("predictions.shape:", predictions.shape)
 print("predictions[0]:", predictions[0])
 print("np.argmax(predictions[0]):", np.argmax(predictions[0]))
 print("test_labels[0]:", test_labels[0])
+
 
 def plot_image(i, predictions_array, true_labels, images):
     predictions_array, true_label, img = predictions_array[i], true_labels[i], images[i]
@@ -134,32 +139,35 @@ def plot_value_array(i, predictions_array, true_label):
     thisplot[predicted_label].set_color('red')
     thisplot[true_label].set_color('blue')
 
+
 i = 0
-plt.figure(figsize=(6,3))
-plt.subplot(1,2,1)
+plt.figure(figsize=(6, 3))
+plt.subplot(1, 2, 1)
 plot_image(i, predictions, test_labels, test_images)
-plt.subplot(1,2,2)
-plot_value_array(i, predictions,  test_labels)
+plt.subplot(1, 2, 2)
+plot_value_array(i, predictions, test_labels)
+plt.show()
 
 i = 12
-plt.figure(figsize=(6,3))
-plt.subplot(1,2,1)
+plt.figure(figsize=(6, 3))
+plt.subplot(1, 2, 1)
 plot_image(i, predictions, test_labels, test_images)
-plt.subplot(1,2,2)
-plot_value_array(i, predictions,  test_labels)
+plt.subplot(1, 2, 2)
+plot_value_array(i, predictions, test_labels)
+plt.show()
 
 # Plot the first X test images, their predicted label, and the true label
 # Color correct predictions in blue, incorrect predictions in red
 num_rows = 5
 num_cols = 3
-num_images = num_rows*num_cols
-plt.figure(figsize=(2*2*num_cols, 2*num_rows))
+num_images = num_rows * num_cols
+plt.figure(figsize=(2 * 2 * num_cols, 2 * num_rows))
 for i in range(num_images):
-    plt.subplot(num_rows, 2*num_cols, 2*i+1)
+    plt.subplot(num_rows, 2 * num_cols, 2 * i + 1)
     plot_image(i, predictions, test_labels, test_images)
-    plt.subplot(num_rows, 2*num_cols, 2*i+2)
+    plt.subplot(num_rows, 2 * num_cols, 2 * i + 2)
     plot_value_array(i, predictions, test_labels)
-
+plt.show()
 
 # Grab an image from the test dataset
 img = test_images[0]
