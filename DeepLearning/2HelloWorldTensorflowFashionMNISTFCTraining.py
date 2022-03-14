@@ -77,7 +77,7 @@ model.compile(optimizer='adam',
               metrics=['accuracy'])
 
 BATCH_SIZE = 32
-EPOCHS = 2 #5
+EPOCHS = 5
 STEPS_PER_EPOCH=math.ceil(num_train_examples/BATCH_SIZE)
 
 train_dataset = train_dataset.repeat().shuffle(num_train_examples).batch(BATCH_SIZE)

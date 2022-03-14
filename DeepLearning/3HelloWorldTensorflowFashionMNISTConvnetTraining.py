@@ -6,6 +6,7 @@
 
 # Import TensorFlow and TensorFlow Datasets
 import tensorflow as tf
+import tensorflow.keras as tf_keras
 import tensorflow_datasets as tfds
 import math
 import numpy as np
@@ -59,15 +60,15 @@ for (image, label) in test_dataset.take(25):
     i += 1
 plt.show()
 
-model = tf.keras.Sequential([
-    tf.keras.layers.Conv2D(32, (3,3), padding='same', activation=tf.nn.relu,
+model = tf_keras.Sequential([
+    tf_keras.layers.Conv2D(32, (3,3), padding='same', activation=tf.nn.relu,
                            input_shape=(28, 28, 1)),
-    tf.keras.layers.MaxPooling2D((2, 2), strides=2),
-    tf.keras.layers.Conv2D(64, (3,3), padding='same', activation=tf.nn.relu),
-    tf.keras.layers.MaxPooling2D((2, 2), strides=2),
-    tf.keras.layers.Flatten(),
-    tf.keras.layers.Dense(128, activation=tf.nn.relu),
-    tf.keras.layers.Dense(10,  activation=tf.nn.softmax)
+    tf_keras.layers.MaxPooling2D((2, 2), strides=2),
+    tf_keras.layers.Conv2D(64, (3,3), padding='same', activation=tf.nn.relu),
+    tf_keras.layers.MaxPooling2D((2, 2), strides=2),
+    tf_keras.layers.Flatten(),
+    tf_keras.layers.Dense(128, activation=tf.nn.relu),
+    tf_keras.layers.Dense(10,  activation=tf.nn.softmax)
 ])
 
 model.summary()
