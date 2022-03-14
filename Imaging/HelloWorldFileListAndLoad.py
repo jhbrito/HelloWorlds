@@ -2,7 +2,7 @@ import os
 import PIL.Image as PImage
 import matplotlib.pyplot as plt
 
-pasta = "membrane/train/image"
+pasta = "../membrane/train/image"
 
 list_of_files = os.scandir(pasta)
 

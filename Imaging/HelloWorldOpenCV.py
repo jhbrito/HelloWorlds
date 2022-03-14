@@ -1,12 +1,12 @@
-# Demo with a few examples of using OpenCV functions and UI
+# Demo with a few examples of using Imaging functions and UI
 # packages: opencv-python
 # uses lena: https://upload.wikimedia.org/wikipedia/en/7/7d/Lenna_%28test_image%29.png
 
 import numpy as np
 import cv2
 
-print("Hello World OpenCV")
-print("OpenCV Version:", cv2.__version__)
+print("Hello World Imaging")
+print("Imaging Version:", cv2.__version__)
 
 image = np.ones((256, 256), dtype="uint8")
 image = image * 127

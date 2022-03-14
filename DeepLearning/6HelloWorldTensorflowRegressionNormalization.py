@@ -8,6 +8,8 @@ import matplotlib.pyplot as plt
 from matplotlib import cm
 # from matplotlib.ticker import LinearLocator, FormatStrFormatter
 import numpy as np
+import tensorflow as tf
+import tensorflow.keras as tf_keras
 
 # celsius_d    = np.array([-40, -10, 0, 8, 15, 22, 38], dtype=float)
 # fahrenheit_d = np.array([-40, 14, 32, 46, 59, 72, 100], dtype=float)
@@ -22,28 +24,27 @@ fahrenheit = celsius * 1.8 + 32
 # for i,c in enumerate(celsius):
 #     print("{} degrees Celsius = {} degrees Fahrenheit".format(c, fahrenheit[i]))
 
-import tensorflow as tf
 print("Tensorflow {}".format(tf.__version__))
 print("GPU devices: {}".format(tf.config.list_physical_devices('GPU')))
 
 ##########################
 # Simple Model
 
-l0 = tf.keras.layers.Dense(units=1, input_shape=[1])
-model = tf.keras.Sequential([l0])
+l0 = tf_keras.layers.Dense(units=1, input_shape=[1])
+model = tf_keras.Sequential([l0])
 # or
-# model = tf.keras.Sequential([
-#     tf.keras.layers.Dense(units=1, input_shape=[1])
+# model = tf_keras.Sequential([
+#     tf_keras.layers.Dense(units=1, input_shape=[1])
 #     ])
 model.compile(
     loss='mean_squared_error',
-    optimizer=tf.keras.optimizers.Adam(0.1)
+    optimizer=tf_keras.optimizers.Adam(0.1)
 )
 
 l0_weights_init = l0.get_weights()
 print("Simple Model - layer variables init: {}".format(l0_weights_init))
 
-class BatchLossHistory(tf.keras.callbacks.Callback):
+class BatchLossHistory(tf_keras.callbacks.Callback):
     def on_train_begin(self, logs={}):
         self.batch_losses = []
         self.batch_weights = []
@@ -98,13 +99,13 @@ print("Simple model error is: {} degrees Fahrenheit".format(f-f_gt))
 ######################
 # Complex Model
 
-l0 = tf.keras.layers.Dense(units=4, input_shape=[1])
-l1 = tf.keras.layers.Dense(units=4)
-l2 = tf.keras.layers.Dense(units=1)
-model = tf.keras.Sequential([l0, l1, l2])
+l0 = tf_keras.layers.Dense(units=4, input_shape=[1])
+l1 = tf_keras.layers.Dense(units=4)
+l2 = tf_keras.layers.Dense(units=1)
+model = tf_keras.Sequential([l0, l1, l2])
 model.compile(
     loss='mean_squared_error',
-    optimizer=tf.keras.optimizers.Adam(0.1))
+    optimizer=tf_keras.optimizers.Adam(0.1))
 
 history_complex = model.fit(celsius, fahrenheit, epochs=EPOCHS, verbose=False)
 print("Finished training the complex model")
@@ -138,12 +139,12 @@ def denormalize(values_n, values_mean, values_std):
 celsius_n, celsius_mean, celsius_std  = normalize(celsius)
 fahrenheit_n, fahrenheit_mean, fahrenheit_std  = normalize(fahrenheit)
 
-l0_n = tf.keras.layers.Dense(units=1, input_shape=[1])
-model_n = tf.keras.Sequential([l0_n])
+l0_n = tf_keras.layers.Dense(units=1, input_shape=[1])
+model_n = tf_keras.Sequential([l0_n])
 
 model_n.compile(
     loss='mean_squared_error',
-    optimizer=tf.keras.optimizers.Adam(0.1)
+    optimizer=tf_keras.optimizers.Adam(0.1)
 )
 
 l0_weights_n_init = l0_n.get_weights()

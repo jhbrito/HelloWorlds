@@ -75,3 +75,13 @@ print("b+a:{}".format(b+a))
 print("a*b:{}".format(a*b))
 print("b*a:{}".format(b*a))
 print("a**b:{}".format(a**b))
+
+a = np.random.randn(4).reshape((2,2))
+b = np.random.randn(4).reshape((2,2))
+
+c = a @ b
+print("c:{}".format(c))
+
+d = 2 * a
+print("d:{}".format(d))
+

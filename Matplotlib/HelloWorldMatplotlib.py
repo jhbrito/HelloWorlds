@@ -16,6 +16,7 @@ ax.plot(x, y)
 ax.set_xlabel("x")
 ax.set_ylabel("y")
 ax.set_title("Line")
+# plt.show()
 
 # 3D surface graph
 ax = fig.add_subplot(1, 2, 2, projection='3d')

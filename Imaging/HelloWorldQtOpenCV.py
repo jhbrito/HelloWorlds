@@ -1,4 +1,4 @@
-# Demo with a few examples of using Qt5 as a front-end with OpenCV
+# Demo with a few examples of using Qt5 as a front-end with Imaging
 # packages: opencv-python, PyQt5
 
 import sys
@@ -50,7 +50,7 @@ def on_cameraOFF_clicked():
 
 
 print("Qt version: " + str(qVersion()))
-print("OpenCV Version:",cv2.__version__)
+print("Imaging Version:",cv2.__version__)
 
 cap = cv2.VideoCapture()
 app = QtWidgets.QApplication(sys.argv)

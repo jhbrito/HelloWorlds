@@ -6,6 +6,7 @@
 
 # Import TensorFlow and TensorFlow Datasets
 import tensorflow as tf
+import tensorflow.keras as tf_keras
 import tensorflow_datasets as tfds
 import math
 import numpy as np
@@ -56,14 +57,15 @@ for (image, label) in test_dataset.take(25):
     plt.yticks([])
     plt.grid(False)
     plt.imshow(image, cmap=plt.cm.binary)
+    # print("label:", label.numpy())
     plt.xlabel(class_names[label])
     i += 1
 plt.show()
 
-model = tf.keras.Sequential([
-    tf.keras.layers.Flatten(input_shape=(28, 28, 1)),
-    tf.keras.layers.Dense(128, activation=tf.nn.relu),
-    tf.keras.layers.Dense(10,  activation=tf.nn.softmax)
+model = tf_keras.Sequential([
+    tf_keras.layers.Flatten(input_shape=(28, 28, 1)),
+    tf_keras.layers.Dense(128, activation=tf.nn.relu),
+    tf_keras.layers.Dense(10,  activation=tf.nn.softmax)
 ])
 
 model.summary()
@@ -142,6 +144,7 @@ plt.subplot(1,2,1)
 plot_image(i, predictions, test_labels, test_images)
 plt.subplot(1,2,2)
 plot_value_array(i, predictions,  test_labels)
+plt.show()
 
 # Plot the first X test images, their predicted label, and the true label
 # Color correct predictions in blue, incorrect predictions in red
@@ -155,7 +158,7 @@ for i in range(num_images):
     plt.subplot(num_rows, 2*num_cols, 2*i+2)
     plot_value_array(i, predictions, test_labels)
 
-
+plt.show()
 # Grab an image from the test dataset
 img = test_images[0]
 print("img.shape:", img.shape)
