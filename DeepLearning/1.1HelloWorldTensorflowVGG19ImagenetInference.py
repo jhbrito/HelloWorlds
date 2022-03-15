@@ -45,7 +45,6 @@ print("predicted_class_name1:", predicted_class_name1)
 predicted_class_name2= imagenet_labels[predicted_class2+1]
 print("predicted_class_name2:", predicted_class_name2)
 
-
 image3 = tf_keras.preprocessing.image.load_img(image_path, target_size=(224, 224))
 x3 = tf_keras.preprocessing.image.img_to_array(image3)
 x3 = np.expand_dims(x3, axis=0)
