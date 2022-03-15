@@ -31,7 +31,11 @@ x[0] = x1
 x[1] = x2
 
 print("batch shape", x.shape)
-x = x * 1.0
+# x = x * 1.0
+mean = [103.939, 116.779, 123.68]
+x[:, :, :, 0] -= mean[0]
+x[:, :, :, 1] -= mean[1]
+x[:, :, :, 2] -= mean[2]
 
 result = model.predict(x)
 print(result.shape)

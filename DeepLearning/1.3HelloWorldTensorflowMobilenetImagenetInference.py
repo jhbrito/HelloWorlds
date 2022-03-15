@@ -31,7 +31,6 @@ x[0] = x1
 x[1] = x2
 
 print("batch shape", x.shape)
-#x = x / 255.0
 x = x / 255.0
 x = x * 2.0
 x = x - 1.0
