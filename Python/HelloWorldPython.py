@@ -15,7 +15,7 @@ print("Hello World")
 a = 1
 b = 2
 c = a + b
-print("c=", c)
+print("c:", c)
 
 c = 4
 
@@ -28,17 +28,17 @@ else:
 
 y = 1
 for x in range(10):
-    print("x =", x)
+    print("x:", x)
     y = y + x
-print("y =", y)
+print("y:", y)
 
 x = 0
 y = 0
 while x < 10:
-    print("x =", x)
+    print("x:", x)
     y = y + x
     x = x + 1
-print("y =", y)
+print("y:", y)
 
 a = 1
 b = 3.1415
@@ -91,7 +91,7 @@ d = {1, 2, 3, 4, 3, 5}
 print(d)
 for i in range(10):
     if i in d:
-        print(str(i), " is in d")
+        print(str(i), "is in d")
 
 # dictionaries
 words = dict()
@@ -100,6 +100,6 @@ words["LEEC"] = "Licenciatura em Engenharia Electrotécnica e de Computadores"
 words["EST"] = "Escola Superior de Tecnologia"
 words["IPCA"] = "Instituto Politécnico do Cávado e do Ave"
 
-print("BCVT - ", words["BCVT"])
+print("BCVT -", words["BCVT"])
 
 print("Goodbye World")

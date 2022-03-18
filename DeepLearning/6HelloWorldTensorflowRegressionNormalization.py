@@ -1,6 +1,6 @@
 # regression to convert from Celsius to Fahrenheit
 # Straightforward example without normalization
-# the network should aproximate the correct relationship between Celsius and Fahrenheit
+# the network should approximate the correct relationship between Celsius and Fahrenheit
 # C × 1.8 + 32 = F
 
 from mpl_toolkits.mplot3d import Axes3D
