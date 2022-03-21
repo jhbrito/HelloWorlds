@@ -14,8 +14,8 @@ zip_file = tf.keras.utils.get_file(origin=_URL, fname="flower_photos.tgz", extra
 base_dir = os.path.join(os.path.dirname(zip_file), 'flower_photos')
 
 classes = ['roses', 'daisy', 'dandelion', 'sunflowers', 'tulips']
-dataset_split_percentage = 0.25 # 0.8 # percentage of images for training
-epochs = 3 #80
+dataset_split_percentage = 0.8 # percentage of images for training
+epochs = 10 #80
 batch_size = 64 #100
 IMG_SHAPE = 224
 
@@ -71,7 +71,7 @@ modelMobilenet = tf.keras.applications.mobilenet_v2.MobileNetV2(weights='imagene
 # model = tf.keras.applications.inception_v3.InceptionV3(weights="imagenet")
 modelMobilenet.summary()
 from tensorflow.keras.utils import plot_model
-plot_model(modelMobilenet, to_file='Mobilenet.png')
+# plot_model(modelMobilenet, to_file='Mobilenet.png')
 
 modelMobilenet.trainable = False
 base_output = modelMobilenet.layers[-2].output # layer number obtained from model summary above
@@ -87,7 +87,7 @@ modelMobilenetFlowers.compile(
     metrics=['accuracy'])
 
 
-history = modelMobilenetFlowers.fit_generator(
+history = modelMobilenetFlowers.fit(
     train_data_gen,
     steps_per_epoch=int(np.ceil(train_data_gen.n / float(batch_size))),
     epochs=epochs,

@@ -13,8 +13,8 @@ zip_file = tf.keras.utils.get_file(origin=_URL, fname="flower_photos.tgz", extra
 base_dir = os.path.join(os.path.dirname(zip_file), 'flower_photos')
 
 classes = ['roses', 'daisy', 'dandelion', 'sunflowers', 'tulips']
-dataset_split_percentage = 0.25 # 0.8 # percentage of images for training
-epochs = 3 #80
+dataset_split_percentage = 0.8 # percentage of images for training
+epochs = 10 #80
 batch_size = 64#100
 IMG_SHAPE = 224
 
@@ -44,13 +44,15 @@ train_dir = os.path.join(base_dir, 'train')
 val_dir = os.path.join(base_dir, 'val')
 
 
-
 # This function will plot images in the form of a grid with 1 row and 5 columns where images are placed in each column.
 def plotImages(images_arr):
-    fig, axes = plt.subplots(1, 5) #, figsize=(10, 10))
+    fig, axes = plt.subplots(5, 5) #, figsize=(10, 10))
     axes = axes.flatten()
     for img, ax in zip(images_arr, axes):
         ax.imshow(img)
+        ax.set_xticks([])
+        ax.set_yticks([])
+
 
     plt.tight_layout()
     plt.show()
@@ -62,7 +64,7 @@ train_data_gen = image_gen.flow_from_directory(
     directory=train_dir,
     shuffle=True,
     target_size=(IMG_SHAPE, IMG_SHAPE))
-augmented_images = [train_data_gen[0][0][0] for i in range(5)]
+augmented_images = [train_data_gen[0][0][0] for i in range(25)]
 plotImages(augmented_images)
 
 image_gen = ImageDataGenerator(rescale=1./255,
@@ -72,7 +74,7 @@ train_data_gen = image_gen.flow_from_directory(
     directory=train_dir,
     shuffle=True,
     target_size=(IMG_SHAPE, IMG_SHAPE))
-augmented_images = [train_data_gen[0][0][0] for i in range(5)]
+augmented_images = [train_data_gen[0][0][0] for i in range(25)]
 plotImages(augmented_images)
 
 image_gen = ImageDataGenerator(rescale=1./255,
@@ -127,7 +129,7 @@ model.compile(
     metrics=['accuracy'])
 
 
-history = model.fit_generator(
+history = model.fit(
     train_data_gen,
     steps_per_epoch=int(np.ceil(train_data_gen.n / float(batch_size))),
     epochs=epochs,
