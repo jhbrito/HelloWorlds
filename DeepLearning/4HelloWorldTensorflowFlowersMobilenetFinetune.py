@@ -5,6 +5,7 @@ import numpy as np
 import glob
 import shutil
 import matplotlib.pyplot as plt
+import datetime
 
 import tensorflow as tf
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
@@ -86,13 +87,17 @@ modelMobilenetFlowers.compile(
     loss='sparse_categorical_crossentropy',
     metrics=['accuracy'])
 
+log_dir = os.path.join("logs", "fit", datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
+tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir)
 
 history = modelMobilenetFlowers.fit(
     train_data_gen,
     steps_per_epoch=int(np.ceil(train_data_gen.n / float(batch_size))),
     epochs=epochs,
     validation_data=val_data_gen,
-    validation_steps=int(np.ceil(val_data_gen.n / float(batch_size))) )
+    validation_steps=int(np.ceil(val_data_gen.n / float(batch_size))),
+    callbacks=[tensorboard_callback]
+)
 
 acc = history.history['accuracy']
 val_acc = history.history['val_accuracy']
