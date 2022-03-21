@@ -18,7 +18,6 @@ c = a + b
 print("c:", c)
 
 c = 4
-
 if c == 3:
     print("entrei no if")
 elif c == 4:
