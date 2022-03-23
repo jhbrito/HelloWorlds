@@ -84,7 +84,7 @@ train_data_gen = image_gen.flow_from_directory(
     directory=train_dir,
     shuffle=True,
     target_size=(IMG_SHAPE, IMG_SHAPE))
-augmented_images = [train_data_gen[0][0][0] for i in range(5)]
+augmented_images = [train_data_gen[0][0][0] for i in range(25)]
 plotImages(augmented_images)
 
 image_gen_train = ImageDataGenerator(
@@ -100,7 +100,7 @@ train_data_gen = image_gen_train.flow_from_directory(
     shuffle=True,
     target_size=(IMG_SHAPE,IMG_SHAPE),
     class_mode='sparse')
-augmented_images = [train_data_gen[0][0][0] for i in range(5)]
+augmented_images = [train_data_gen[0][0][0] for i in range(25)]
 plotImages(augmented_images)
 
 image_gen_val = ImageDataGenerator(rescale=1./255)
