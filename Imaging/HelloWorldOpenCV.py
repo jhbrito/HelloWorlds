@@ -139,7 +139,9 @@ cv2.drawContours(image_with_contours, contours, -1, (255, 0, 0), 1)
 viewImage(image_with_contours, "Lena contours")
 
 # Face Detection
-face_cascade = cv2.CascadeClassifier('venv\Lib\site-packages\cv2\data\haarcascade_frontalface_default.xml')
+# haarcascade_folder = 'venv/Lib/site-packages/cv2/data/'
+haarcascade_folder = 'C:/ProgramData/Anaconda3/envs/DevEnvConda39/Library/etc/haarcascades/'
+face_cascade = cv2.CascadeClassifier(haarcascade_folder + 'haarcascade_frontalface_default.xml')
 faces = face_cascade.detectMultiScale(gray_image)
 print("Lena with {} faces detected".format(len(faces)))
 image_faces = image.copy()

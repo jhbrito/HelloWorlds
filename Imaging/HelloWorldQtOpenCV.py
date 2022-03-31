@@ -12,7 +12,8 @@ import numpy as nd
 def img2pixmap(image):
     height, width, channel = image.shape
     bytesPerLine = 3 * width
-    qimage = QImage(image.data, width, height, bytesPerLine, QImage.Format_BGR888)
+    imageRGB = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    qimage = QImage(imageRGB.data, width, height, bytesPerLine, QImage.Format_RGB888)
     pixmap = QPixmap.fromImage(qimage)
     return pixmap
 
@@ -50,7 +51,7 @@ def on_cameraOFF_clicked():
 
 
 print("Qt version: " + str(qVersion()))
-print("Imaging Version:",cv2.__version__)
+print("OpenCV Version:", cv2.__version__)
 
 cap = cv2.VideoCapture()
 app = QtWidgets.QApplication(sys.argv)
