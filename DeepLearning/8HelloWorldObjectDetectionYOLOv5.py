@@ -16,7 +16,14 @@ model = yolov5.load('../yolov5n.pt')
 print(model.names)
 model.conf = 0.33
 
-cap = cv2.VideoCapture(args.input)
+# cap = cv2.VideoCapture(args.input)
+cap = cv2.VideoCapture()
+if not cap.isOpened():
+    if args.input == "0" or args.input == "1":
+        cap.open(int(args.input))
+    else:
+        cap.open(args.input)
+
 i = 0
 begin_time = -1
 
