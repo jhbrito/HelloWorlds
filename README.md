@@ -24,6 +24,10 @@ pip freeze > requirements.txt
 ## Import pip environment
 pip install -r requirements.txt
 
+## Unofficial Windows Binaries for Python Extension Packages
+
+<https://www.lfd.uci.edu/~gohlke/pythonlibs/>
+
 GDAL 3.1.4 binary: https://download.lfd.uci.edu/pythonlibs/w4tscw6k/cp36/GDAL-3.1.4-cp36-cp36m-win_amd64.whl
 
 rasterio 1.1.8 binary: https://download.lfd.uci.edu/pythonlibs/w4tscw6k/cp36/rasterio-1.1.8-cp36-cp36m-win_amd64.whl
