@@ -12,6 +12,15 @@ Topics so far:
 - Tensorflow
 - Satellite images
 
+## Create Conda Envoronment
+
+```
+conda create -n DevEnv310 python=3.10
+conda activate DevEnv310
+conda install -c conda-forge cudatoolkit=11.2 cudnn=8.1.0
+pip install "tensorflow<2.11"
+```
+
 ## Export conda environment
 conda env export > environment.yml
 
