@@ -14,14 +14,15 @@ Topics so far:
 
 ## Create conda environment
 ```
-conda env create -n Project_Environment --file environment.yml
-```
-so
-```
 conda create -n DevEnv310 python=3.10
 conda activate DevEnv310
 conda install -c conda-forge cudatoolkit=11.2 cudnn=8.1.0
 pip install "tensorflow<2.11"
+```
+
+## Import conda environment
+```
+conda env create -n Project_Environment --file environment.yml
 ```
 
 ## Export conda environment
