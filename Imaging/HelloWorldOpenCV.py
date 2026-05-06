@@ -141,6 +141,7 @@ viewImage(image_with_contours, "Lena contours")
 # Face Detection
 # haarcascade_folder = 'venv/Lib/site-packages/cv2/data/'
 haarcascade_folder = 'C:/ProgramData/Anaconda3/envs/DevEnvConda39/Library/etc/haarcascades/'
+haarcascade_folder = cv2.data.haarcascades
 face_cascade = cv2.CascadeClassifier(haarcascade_folder + 'haarcascade_frontalface_default.xml')
 faces = face_cascade.detectMultiScale(gray_image)
 print("Lena with {} faces detected".format(len(faces)))
@@ -162,7 +163,9 @@ def display_box(im, bbox):
     cv2.imshow("Results", im)
 
 
-inputImage = cv2.imread("qrcode.jpg")
+# inputImage = cv2.imread("qrcode.jpg")
+inputImage = cv2.imread("qr_code.png")
+# inputImage = cv2.imread("qr.png")
 qrDecoder = cv2.QRCodeDetector()
 data, bbox, rectifiedImage = qrDecoder.detectAndDecode(inputImage)
 if len(data) > 0:
